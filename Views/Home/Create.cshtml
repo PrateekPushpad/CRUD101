@@ -1,0 +1,224 @@
+﻿@model MVCCRUD.Models.Student
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm("Create", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @*@Html.HiddenFor(CountryName)*@
+
+    @Html.HiddenFor(model => model.StudentId, new { @id = "StudentId" })
+   
+    @Html.HiddenFor(model => model.CountryName, new { @id = "txtCountryName" })
+    @Html.HiddenFor(model => model.StateName, new { @id = "txtStateName" })
+    @Html.HiddenFor(model => model.CityName, new { @id = "txtCityName" })
+
+
+    <div class="form-horizontal">
+        <h4>Student</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Course, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Course, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Course, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CountryId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CountryId, Model.CountryList, "--Select--", new { @class = "form-control", id = "ddlCountry" })
+                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.StateId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(m => m.StateId, (IEnumerable<SelectListItem>)ViewBag.ddlState, "--Select--", new { @id = "ddlState" })
+                    @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+
+
+
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.StateId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.StateId, new SelectList(Model.StateList, "Value", "Text", 1), new { @class = "form-control required abce", id = "ddlState" })
+                    @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StateId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.StateId, Model.StateList, "--Select State--", new { @class = "form-control", id = "ddlState" })
+                @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CityId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CityId, Model.CityList, "--Select City---", new { @class = "form-control", id = "ddlCity" })
+                @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.ProfileImage, htmlAttributes: new { @class = "control-label col-md-2", @for = "formFile" })
+            <div class="col-md-10">
+                @*@Html.DropDownListFor(model => model.CountryId, new SelectList(Enum.GetValues(typeof(Countri))), "Select Gender")-->*@
+                <input type="file" id="image1" name="userImage" onchange="ShowImagePreview(this)" accept="image/*" />
+                @if (Model.ProfileImage != null)
+
+                {
+                    <img src="~/Content/DB_Images/User/@Model.ProfileImage" class="rounded-circle" id="imgprev" style="width:150px;height:150px;" />
+                }
+                else
+                {
+                    <img src="https://cdn.landesa.org/wp-content/uploads/default-user-image.png" class="rounded-circle" id="imgprev" style="width:150px;height:150px;" />
+                }
+                @*@Html.HiddenFor(m => m.ProfileImage, new { htmlAttributes = new { @class = "form-control" } })*@
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    function ShowImagePreview(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imgprev').prop('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+<!-- content-wrapper ends -->
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).on('change', '#ddlCountry', function () {
+        var CountryId = $(this).val();
+        var CountryName = $("#ddlCountry option:selected").text();
+        alert(CountryName);
+        $("#txtCountryName").val(CountryName);
+        $("#txtState").val("");
+        $("#txtCity").val("");
+
+        if (CountryId) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("DistrictByStateId", "Home")",
+                data: { CountryId: CountryId },
+                success: function (data) {
+                    if (data) {
+                        //console.log(data);
+                        $("#ddlState").empty();
+                        $("#ddlState").append('<option>--Select District--</option>');
+                        $.each(data, function (key, value) {
+                            //console.log(value.Value);
+
+                            $("#ddlState").append('<option value="' + value.Value + '">' + value.Text + '</option>');
+                        });
+                    } else {
+                        $("#ddlState").empty();
+                    }
+                }
+            });
+        } else {
+            $("#ddlState").empty();
+        }
+    });
+
+</script>
+
+<script>
+    $(document).on('change', '#ddlState', function () {
+        var StateId = $(this).val();
+        var CountryId = $(this).val();
+        var StateName = $("#ddlState option:selected").text();
+        //alert(StateName);
+        $("#txtStateName").val(StateName);
+        $("#txtCity").val("");
+        //alert(StateId);
+
+        if (StateId) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("CityByStateId", "Home")",
+                data: { StateId: StateId },
+                success: function (data) {
+                    if (data) {
+                        $("#ddlCity").empty();
+                        $("#ddlCity").append('<option>---Select City---</option>');
+                        $.each(data, function (key, value) {
+                            $("#ddlCity").append('<option value="' + value.Value + '">' + value.Text + '</option>');
+                        });
+                    }
+                        else {
+                        $("ddlCity").empty();
+                    }
+                }
+
+            });
+        } else {
+            $("ddlCity").empty();
+        }
+    })
+    $(document).on('change', '#ddlCity', function () {
+        var CityId = $(this).val();
+        var CityId = $(this).val();
+        var CityName = $("#ddlCity option:selected").text();
+        //alert(StateName);
+        $("#txtCityName").val(CityName);
+
+        //alert(StateId);
+
+
+    })
+
+</script>
+
+
+
+

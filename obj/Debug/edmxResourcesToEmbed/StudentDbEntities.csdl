@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="StudentDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="tblCity">
+    <Key>
+      <PropertyRef Name="CityId" />
+    </Key>
+    <Property Name="CityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CityName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="StateId" Type="Int32" />
+    <NavigationProperty Name="tblState" Relationship="Self.FK__tblCity__StateId__300424B4" FromRole="tblCity" ToRole="tblState" />
+    <NavigationProperty Name="tblStudents" Relationship="Self.FK__tblStuden__CityI__33D4B598" FromRole="tblCity" ToRole="tblStudent" />
+  </EntityType>
+  <EntityType Name="tblCountry">
+    <Key>
+      <PropertyRef Name="CountryId" />
+    </Key>
+    <Property Name="CountryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CountryName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="tblStates" Relationship="Self.FK__tblState__Countr__2D27B809" FromRole="tblCountry" ToRole="tblState" />
+    <NavigationProperty Name="tblStudents" Relationship="Self.FK__tblStuden__Count__31EC6D26" FromRole="tblCountry" ToRole="tblStudent" />
+  </EntityType>
+  <EntityType Name="tblState">
+    <Key>
+      <PropertyRef Name="StateId" />
+    </Key>
+    <Property Name="StateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StateName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CountryId" Type="Int32" />
+    <NavigationProperty Name="tblCities" Relationship="Self.FK__tblCity__StateId__300424B4" FromRole="tblState" ToRole="tblCity" />
+    <NavigationProperty Name="tblCountry" Relationship="Self.FK__tblState__Countr__2D27B809" FromRole="tblState" ToRole="tblCountry" />
+    <NavigationProperty Name="tblStudents" Relationship="Self.FK__tblStuden__State__32E0915F" FromRole="tblState" ToRole="tblStudent" />
+  </EntityType>
+  <EntityType Name="tblStudent">
+    <Key>
+      <PropertyRef Name="StudentId" />
+    </Key>
+    <Property Name="StudentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Course" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CountryId" Type="Int32" />
+    <Property Name="StateId" Type="Int32" />
+    <Property Name="CityId" Type="Int32" />
+    <Property Name="ProfileImage" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CountryName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="StateName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CityName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="tblCity" Relationship="Self.FK__tblStuden__CityI__33D4B598" FromRole="tblStudent" ToRole="tblCity" />
+    <NavigationProperty Name="tblCountry" Relationship="Self.FK__tblStuden__Count__31EC6D26" FromRole="tblStudent" ToRole="tblCountry" />
+    <NavigationProperty Name="tblState" Relationship="Self.FK__tblStuden__State__32E0915F" FromRole="tblStudent" ToRole="tblState" />
+  </EntityType>
+  <Association Name="FK__tblCity__StateId__300424B4">
+    <End Role="tblState" Type="Self.tblState" Multiplicity="0..1" />
+    <End Role="tblCity" Type="Self.tblCity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblState">
+        <PropertyRef Name="StateId" />
+      </Principal>
+      <Dependent Role="tblCity">
+        <PropertyRef Name="StateId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__tblStuden__CityI__33D4B598">
+    <End Role="tblCity" Type="Self.tblCity" Multiplicity="0..1" />
+    <End Role="tblStudent" Type="Self.tblStudent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCity">
+        <PropertyRef Name="CityId" />
+      </Principal>
+      <Dependent Role="tblStudent">
+        <PropertyRef Name="CityId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__tblState__Countr__2D27B809">
+    <End Role="tblCountry" Type="Self.tblCountry" Multiplicity="0..1" />
+    <End Role="tblState" Type="Self.tblState" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCountry">
+        <PropertyRef Name="CountryId" />
+      </Principal>
+      <Dependent Role="tblState">
+        <PropertyRef Name="CountryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__tblStuden__Count__31EC6D26">
+    <End Role="tblCountry" Type="Self.tblCountry" Multiplicity="0..1" />
+    <End Role="tblStudent" Type="Self.tblStudent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCountry">
+        <PropertyRef Name="CountryId" />
+      </Principal>
+      <Dependent Role="tblStudent">
+        <PropertyRef Name="CountryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__tblStuden__State__32E0915F">
+    <End Role="tblState" Type="Self.tblState" Multiplicity="0..1" />
+    <End Role="tblStudent" Type="Self.tblStudent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblState">
+        <PropertyRef Name="StateId" />
+      </Principal>
+      <Dependent Role="tblStudent">
+        <PropertyRef Name="StateId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="StudentDbEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="tblCities" EntityType="Self.tblCity" />
+    <EntitySet Name="tblCountries" EntityType="Self.tblCountry" />
+    <EntitySet Name="tblStates" EntityType="Self.tblState" />
+    <EntitySet Name="tblStudents" EntityType="Self.tblStudent" />
+    <AssociationSet Name="FK__tblCity__StateId__300424B4" Association="Self.FK__tblCity__StateId__300424B4">
+      <End Role="tblState" EntitySet="tblStates" />
+      <End Role="tblCity" EntitySet="tblCities" />
+    </AssociationSet>
+    <AssociationSet Name="FK__tblStuden__CityI__33D4B598" Association="Self.FK__tblStuden__CityI__33D4B598">
+      <End Role="tblCity" EntitySet="tblCities" />
+      <End Role="tblStudent" EntitySet="tblStudents" />
+    </AssociationSet>
+    <AssociationSet Name="FK__tblState__Countr__2D27B809" Association="Self.FK__tblState__Countr__2D27B809">
+      <End Role="tblCountry" EntitySet="tblCountries" />
+      <End Role="tblState" EntitySet="tblStates" />
+    </AssociationSet>
+    <AssociationSet Name="FK__tblStuden__Count__31EC6D26" Association="Self.FK__tblStuden__Count__31EC6D26">
+      <End Role="tblCountry" EntitySet="tblCountries" />
+      <End Role="tblStudent" EntitySet="tblStudents" />
+    </AssociationSet>
+    <AssociationSet Name="FK__tblStuden__State__32E0915F" Association="Self.FK__tblStuden__State__32E0915F">
+      <End Role="tblState" EntitySet="tblStates" />
+      <End Role="tblStudent" EntitySet="tblStudents" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
